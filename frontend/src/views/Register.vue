@@ -23,7 +23,7 @@
           Já tem uma conta?
           <span 
   class="login-link" 
-  @click="$emit('goLogin')"
+  @click="$router.push('/login')"
 >
   Faça login
 </span>
@@ -68,18 +68,30 @@ const register = async () => {
 
 .container {
   display: flex;
+  width: 100vw; /* Ocupa a largura total da tela */
   height: 100vh;
-  font-family: Arial, sans-serif;
+  margin: 0;
 }
-
 
 .left {
-  width: 60%;
-  background: url("https://images.unsplash.com/photo-1580281657527-47b0c1a3b8d3") no-repeat center;
+  flex: 0 0 60%; /* Trava em 60% */
+  background: url("https://images.unsplash.com/photo-1576091160550-2173dba999ef") no-repeat center;
   background-size: cover;
-  position: relative;
 }
 
+.right {
+  flex: 0 0 40%; /* Trava em 40% */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 30px;
+}
+
+.form-box {
+  width: 100%;
+  max-width: 320px; /* Impede o formulário de esticar e "cortar" */
+}
 
 .overlay {
   width: 100%;

@@ -157,12 +157,11 @@ onMounted(loadConsultations);
 
 
 .dashboard {
+  width: 100%; 
   min-height: 100vh;
   background: linear-gradient(135deg, #a8e6ff, #b9fbc0);
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
-
 
 .navbar {
   display: flex;

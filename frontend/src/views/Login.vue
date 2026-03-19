@@ -19,7 +19,7 @@
 
         <p class="login-text">
           Não tem uma conta?
-          <span class="login-link" @click="$emit('goRegister')">
+          <span class="login-link" @click="$router.push('/register')">
             Cadastre-se
           </span>
         </p>
@@ -33,6 +33,8 @@
 import { useToast } from "vue-toastification";
 import { ref } from "vue";
 import api from "../services/api";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const toast = useToast();
 const email = ref("");
@@ -50,7 +52,6 @@ const login = async () => {
 
     localStorage.setItem("token", response.data.token);
 
-    // Decodificando token com segurança
     let payload = {};
     try {
       payload = JSON.parse(atob(response.data.token.split(".")[1]));
@@ -61,11 +62,10 @@ const login = async () => {
 
     toast.success("Login realizado!");
 
-    // Redireciona pelo role
     if (payload.role === "secretario") {
-      emit("goAdmin");
+      router.push("/admin");
     } else {
-      emit("goDashboard");
+      router.push("/dashboard");
     }
 
   } catch (error) {
@@ -75,17 +75,29 @@ const login = async () => {
 </script>
 
 <style scoped>
+/* Reset local para garantir o box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 .container {
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 100vw; /* Usa 100% da largura da viewport */
+  height: 100vh; /* Usa 100% da altura da viewport */
+  margin: 0;
+  overflow: hidden; /* Evita barras de rolagem */
 }
 
+/* --- AJUSTE DA ÁREA AZUL (ESQUERDA) --- */
 .left {
-  width: 60%;
+  /* Força a proporção exata de 60% */
+  flex: 0 0 60%; 
+  
   background: url("https://images.unsplash.com/photo-1580281657527-47b0c1a3b8d3") no-repeat center;
   background-size: cover;
+  display: block;
 }
 
 .overlay {
@@ -97,28 +109,59 @@ const login = async () => {
   align-items: center;
 }
 
+/* --- CORREÇÃO DA FONTE BRANCA --- */
 .overlay h1 {
-  color: white;
+  color: white; /* Fonte Branca ✅ */
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
+/* --- AJUSTE DA ÁREA BRANCA (DIREITA) --- */
 .right {
-  width: 40%;
+  /* Força a proporção exata de 40% */
+  flex: 0 0 40%;
+  
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;     /* Centraliza verticalmente */
   background: white;
+  padding: 30px; /* Margem interna maior */
 }
 
 .form-box {
-  width: 70%;
+  width: 100%;
+  /* Define um tamanho máximo para o formulário não ficar 
+     feio ou esticado dentro dos 40% */
+  max-width: 320px; 
+}
+
+h2.brand {
+  font-size: 1.6rem;
+  color: #0077b6;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+h3 {
+  margin-bottom: 25px;
+  color: #333;
+  text-align: center;
 }
 
 input {
-  width: 100%;
+  width: 100%; /* Ocupa 100% da form-box */
   padding: 12px;
   margin-bottom: 15px;
   border-radius: 8px;
-  border: 1px solid #00b4d8;
+  border: 1.5px solid #00b4d8;
+  font-size: 16px;
+  display: block;
+  outline: none;
+}
+
+input:focus {
+  border-color: #80ed99;
+  box-shadow: 0 0 5px rgba(128, 237, 147, 0.3);
 }
 
 button {
@@ -129,12 +172,41 @@ button {
   background: #00b4d8;
   color: white;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
+  transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+  background: #0096b1;
+}
+
+button:active {
+  transform: scale(0.98); /* Efeito de clique */
+}
+
+.login-text {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
 }
 
 .login-link {
   color: #00b4d8;
   cursor: pointer;
   font-weight: bold;
+}
+
+/* Responsividade: Se o ecrã for pequeno, foca apenas no formulário */
+@media (max-width: 768px) {
+  .left {
+    display: none; 
+  }
+  .right {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100vh;
+  }
 }
 </style>

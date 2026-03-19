@@ -6,8 +6,8 @@
 
       <div class="links">
         <span>Home</span>
-        <span @click="$emit('goRegister')">Cadastrar-se</span>
-        <span @click="$emit('goLogin')">Login</span>
+        <span @click="$router.push('/register')">Cadastrar-se</span>
+        <span @click="$router.push('/login')">Entrar</span>
       </div>
     </nav>
 
@@ -17,9 +17,9 @@
         Cuidado, atenção e profissionalismo para sua recuperação e bem-estar.
       </p>
 
-      <button @click="$emit('goRegister')">
+     <button @click="$router.push('/register')">
         Marque já sua consulta
-      </button>
+     </button>
     </section>
 
     <section class="info">
