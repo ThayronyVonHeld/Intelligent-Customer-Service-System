@@ -15,15 +15,20 @@
     <div class="grid">
 
       <div class="card">
-        <h3>Agendar Consulta</h3>
+  <h3>Agendar Consulta</h3>
+  <input type="date" v-model="date" :min="todayDate" />
+  
+  <select v-model="time">
+    <option value="" disabled selected>Selecione o horário</option>
+    <option v-for="h in availableHours" :key="h" :value="h">
+      {{ h }}
+    </option>
+  </select>
 
-        <input type="date" v-model="date" />
-        <input type="time" v-model="time" min="09:00" max="19:00"  />
-
-        <button @click="createConsultation">
-          Agendar
-        </button>
-      </div>
+  <button @click="createConsultation" :disabled="!date || !time">
+    Agendar
+  </button>
+</div>
 
       
       <div class="card">
@@ -32,19 +37,17 @@
         <div v-if="consultations.length === 0">
           Nenhuma consulta agendada
         </div>
-<div 
-  v-for="c in consultations" 
-  :key="c._id" 
-  class="consultation"
->
-  <div>
-    <p><strong>📅</strong> {{ c.date }}</p>
-    <p><strong>⏰</strong> {{ c.time }}</p>
-  </div>
 
-  <button class="cancel-btn" @click="deleteConsultation(c._id)">
-    Cancelar
-  </button>
+<div v-for="c in consultations" :key="c._id" class="consultation">
+  <div>
+    <p><strong>📅</strong> {{ c.date }} - <strong>⏰</strong> {{ c.time }}</p>
+    <p v-if="c.clima" style="font-size: 0.85rem; color: #444; margin-top: 5px; background: #fff; padding: 5px 10px; border-radius: 20px; display: inline-block;">
+   <span style="text-transform: capitalize;">🌤️ {{ c.clima.descricao }}</span> 
+   <b style="color: #0077b6; margin-left: 8px;">{{ Math.round(c.clima.temperatura) }}°C</b>
+   <span v-if="c.clima.chuva" style="margin-left: 8px;"> ☔ <i>Leve guarda-chuva!</i></span>
+</p>
+  </div>
+  <button class="cancel-btn" @click="deleteConsultation(c._id)">Cancelar</button>
 </div>
 
       </div>
@@ -55,10 +58,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue"; // Imports unificados
 import api from "../services/api";
 import { useToast } from "vue-toastification";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const toast = useToast();
 
@@ -66,17 +69,20 @@ const consultations = ref([]);
 const date = ref("");
 const time = ref("");
 
-const isSunday = (date) => {
-  const [year, month, day] = date.split("-");
+// Define a data mínima como hoje no calendário
+const todayDate = new Date().toISOString().split('T')[0];
 
+const availableHours = [
+  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", 
+  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", 
+  "5:00 PM", "6:00 PM", "7:00 PM"
+];
+
+const isSunday = (dateStr) => {
+  if (!dateStr) return false;
+  const [year, month, day] = dateStr.split("-");
   const d = new Date(year, month - 1, day);
-
   return d.getDay() === 0;
-};
-
-const isValidTime = (time) => {
-  const [hour] = time.split(":").map(Number);
-  return hour >= 9 && hour <= 19;
 };
 
 const loadConsultations = async () => {
@@ -90,31 +96,26 @@ const loadConsultations = async () => {
 
 const createConsultation = async () => {
   try {
+    if (!date.value || !time.value) {
+      return toast.error("Preencha data e hora");
+    }
 
     if (isSunday(date.value)) {
       return toast.error("Não atendemos aos domingos");
     }
 
-    if (!isValidTime(time.value)) {
-      return toast.error("Horário permitido: 09h às 19h");
-    }
-
-    const [hour, minute] = time.value.split(":");
-    const h = parseInt(hour);
-
-    const period = h >= 12 ? "PM" : "AM";
-    const formattedHour = h % 12 || 12;
-
-    const formattedTime = `${formattedHour}:${minute} ${period}`;
-
     await api.post("/consultations", {
       date: date.value,
-      time: formattedTime
+      time: time.value 
     });
 
-    toast.success("Consulta agendada!");
-    loadConsultations();
-
+    toast.success("Consulta agendada com sucesso!");
+    
+    // Limpar campos após sucesso
+    date.value = "";
+    time.value = "";
+    
+    await loadConsultations();
   } catch (err) {
     toast.error(err.response?.data?.error || "Erro ao agendar");
   }
@@ -136,20 +137,10 @@ const deleteConsultation = async (id) => {
   if (result.isConfirmed) {
     try {
       await api.delete(`/consultations/${id}`);
-      
-      Swal.fire(
-        'Cancelada!',
-        'Consulta cancelada com sucesso.',
-        'success'
-      );
-      
+      Swal.fire('Cancelada!', 'Consulta cancelada com sucesso.', 'success');
       loadConsultations();
     } catch {
-      Swal.fire(
-        'Erro!',
-        'Erro ao cancelar consulta.',
-        'error'
-      );
+      Swal.fire('Erro!', 'Erro ao cancelar consulta.', 'error');
     }
   }
 };
@@ -225,14 +216,21 @@ onMounted(loadConsultations);
   margin-bottom: 15px;
 }
 
-
-input {
+input, select {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
-
+  margin-bottom: 15px; /* Aumentei um pouco o espaçamento */
   border-radius: 8px;
   border: 1px solid #ccc;
+  background-color: white; /* Garante fundo branco no select */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: #00b4d8; /* Cor de destaque ao clicar */
 }
 
 button {
