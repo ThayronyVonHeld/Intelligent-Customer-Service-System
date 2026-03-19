@@ -10,19 +10,20 @@ router.post("/", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = new User({
       name,
       email,
-      password: hashedPassword,
+      password,
       role
     });
 
     await user.save();
 
-    res.status(201).json(user);
+    const userResponse = user.toObject();
+    delete userResponse.password;
 
+    res.status(201).json(userResponse);
+    
   } catch (error) {
     if (error.code === 11000) {
       return res.status(400).json({ error: "Email já cadastrado" });

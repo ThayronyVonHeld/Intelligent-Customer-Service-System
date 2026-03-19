@@ -37,7 +37,9 @@ import api from "../services/api";
 const toast = useToast();
 const email = ref("");
 const password = ref("");
-const emit = defineEmits(["goDashboard"]);
+
+
+const emit = defineEmits(["goDashboard", "goAdmin", "goRegister"]);
 
 const login = async () => {
   try {
@@ -48,11 +50,26 @@ const login = async () => {
 
     localStorage.setItem("token", response.data.token);
 
+    // Decodificando token com segurança
+    let payload = {};
+    try {
+      payload = JSON.parse(atob(response.data.token.split(".")[1]));
+    } catch (err) {
+      toast.error("Erro ao decodificar token");
+      return;
+    }
+
     toast.success("Login realizado!");
-    emit("goDashboard");
+
+    // Redireciona pelo role
+    if (payload.role === "secretario") {
+      emit("goAdmin");
+    } else {
+      emit("goDashboard");
+    }
 
   } catch (error) {
-     toast.error(error.response?.data?.error || "Erro no login");
+    toast.error(error.response?.data?.error || "Erro no login");
   }
 };
 </script>

@@ -14,20 +14,28 @@ router.post("/", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Data e horário são obrigatórios" });
     }
 
-    const existingConsultation = await Consultation.findOne({ date, time });
-
-    if (existingConsultation) {
-      return res.status(400).json({ error: "Horário já está ocupado" });
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      return res.status(400).json({ error: "Não é possível agendar para uma data passada" });
     }
+
+    const existingConsultation = await Consultation.findOne({ date, time });
+    if (existingConsultation) {
+      return res.status(400).json({ error: "Este horário já está ocupado" });
+    }
+
+    const climaNoDia = await getWeatherByDate(date);
 
     const consultation = new Consultation({
       user: req.user.id,
       date,
-      time
+      time,
+      climaInfo: climaNoDia 
     });
 
     await consultation.save();
-
     res.status(201).json(consultation);
 
   } catch (error) {
