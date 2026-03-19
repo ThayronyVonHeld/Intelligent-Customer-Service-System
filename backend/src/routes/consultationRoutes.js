@@ -2,6 +2,7 @@ import express from "express";
 import Consultation from "../models/Consultation.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import roleMiddleware from "../middlewares/roleMiddleware.js";
+import { getWeatherByDate } from "../services/weatherService.js";
 
 const router = express.Router();
 
@@ -38,17 +39,48 @@ router.get("/", authMiddleware, async (req, res) => {
   try {
     const consultations = await Consultation.find({ user: req.user.id });
 
-    res.json(consultations);
+    const result = await Promise.all(
+      consultations.map(async (c) => {
+        const clima = await getWeatherByDate(c.date);
+
+        return {
+          ...c.toObject(),
+          clima
+        };
+      })
+    );
+
+    res.json(result);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-router.get("/all", authMiddleware, roleMiddleware(["secretario"]), async (req, res) => {
+router.get(
+  "/all",
+  authMiddleware,
+  roleMiddleware(["secretario"]),
+  async (req, res) => {
     try {
-      const consultations = await Consultation.find().populate("user", "name email").sort({ date: 1, time: 1 });
+      const consultations = await Consultation
+        .find()
+        .populate("user", "name email")
+        .sort({ date: 1, time: 1 });
 
-      res.json(consultations);
+      const result = await Promise.all(
+        consultations.map(async (c) => {
+          const clima = await getWeatherByDate(c.date);
+
+          return {
+            ...c.toObject(),
+            clima
+          };
+        })
+      );
+
+      res.json(result);
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
