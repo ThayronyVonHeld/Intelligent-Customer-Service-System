@@ -98,19 +98,20 @@ router.get(
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-
     const consultation = await Consultation.findById(id);
 
     if (!consultation) {
       return res.status(404).json({ error: "Consulta não encontrada" });
     }
 
-    if (consultation.user.toString() !== req.user.id) {
-      return res.status(403).json({ error: "Não autorizado" });
+    const isOwner = consultation.user.toString() === req.user.id;
+    const isAdmin = req.user.role === "secretario";
+
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ error: "Não autorizado a cancelar esta consulta" });
     }
 
     await consultation.deleteOne();
-
     res.json({ message: "Consulta cancelada com sucesso" });
 
   } catch (error) {

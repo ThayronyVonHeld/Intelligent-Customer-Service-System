@@ -75,7 +75,6 @@ const login = async () => {
 </script>
 
 <style scoped>
-/* Reset local para garantir o box-sizing */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -84,17 +83,15 @@ const login = async () => {
 
 .container {
   display: flex;
-  width: 100vw; /* Usa 100% da largura da viewport */
-  height: 100vh; /* Usa 100% da altura da viewport */
+  width: 100vw; 
+  height: 100vh;
   margin: 0;
-  overflow: hidden; /* Evita barras de rolagem */
+  overflow: hidden; 
 }
 
-/* --- AJUSTE DA ÁREA AZUL (ESQUERDA) --- */
+
 .left {
-  /* Força a proporção exata de 60% */
   flex: 0 0 60%; 
-  
   background: url("https://images.unsplash.com/photo-1580281657527-47b0c1a3b8d3") no-repeat center;
   background-size: cover;
   display: block;
@@ -109,29 +106,27 @@ const login = async () => {
   align-items: center;
 }
 
-/* --- CORREÇÃO DA FONTE BRANCA --- */
+
 .overlay h1 {
-  color: white; /* Fonte Branca ✅ */
+  color: white; 
   font-size: 2.5rem;
   font-weight: bold;
 }
 
-/* --- AJUSTE DA ÁREA BRANCA (DIREITA) --- */
+
 .right {
-  /* Força a proporção exata de 40% */
+
   flex: 0 0 40%;
   
   display: flex;
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: center;     /* Centraliza verticalmente */
+  justify-content: center; 
+  align-items: center;     
   background: white;
-  padding: 30px; /* Margem interna maior */
+  padding: 30px; 
 }
 
 .form-box {
   width: 100%;
-  /* Define um tamanho máximo para o formulário não ficar 
-     feio ou esticado dentro dos 40% */
   max-width: 320px; 
 }
 
@@ -198,7 +193,6 @@ button:active {
   font-weight: bold;
 }
 
-/* Responsividade: Se o ecrã for pequeno, foca apenas no formulário */
 @media (max-width: 768px) {
   .left {
     display: none; 

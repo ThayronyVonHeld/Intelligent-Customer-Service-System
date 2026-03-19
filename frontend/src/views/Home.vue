@@ -44,19 +44,23 @@
 
 <style scoped>
 
-
 .home {
+  width: 100%;
   min-height: 100vh;
   background: linear-gradient(135deg, #a8e6ff, #b9fbc0);
   color: #1d3557;
+  display: flex;
+  flex-direction: column;
 }
 
-
 .navbar {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 20px 50px;
   background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .logo {
