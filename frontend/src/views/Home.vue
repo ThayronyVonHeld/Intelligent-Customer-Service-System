@@ -1,18 +1,16 @@
 <template>
   <div class="home">
 
-    <!-- 🔝 NAVBAR -->
     <nav class="navbar">
       <h2 class="logo">Dra. Maggessy</h2>
 
       <div class="links">
         <span>Home</span>
         <span @click="$emit('goRegister')">Cadastrar-se</span>
-        <span>Login</span>
+        <span @click="$emit('goLogin')">Login</span>
       </div>
     </nav>
 
-    <!-- 🎯 HERO -->
     <section class="hero">
       <h1>A fisioterapia transforma vidas</h1>
       <p>
@@ -24,7 +22,6 @@
       </button>
     </section>
 
-    <!-- 📊 INFO -->
     <section class="info">
       <div class="card">
         <h3>Experiência</h3>
@@ -47,14 +44,14 @@
 
 <style scoped>
 
-/* 📦 Layout */
+
 .home {
   min-height: 100vh;
   background: linear-gradient(135deg, #a8e6ff, #b9fbc0);
   color: #1d3557;
 }
 
-/* 🔝 NAVBAR */
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -76,7 +73,7 @@
   color: #00b4d8;
 }
 
-/* 🎯 HERO */
+
 .hero {
   text-align: center;
   margin-top: 100px;
@@ -104,7 +101,7 @@
   cursor: pointer;
 }
 
-/* 📊 INFO */
+
 .info {
   display: flex;
   justify-content: center;

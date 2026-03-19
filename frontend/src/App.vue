@@ -1,12 +1,16 @@
 <template>
-  <Home v-if="page === 'home'" @goRegister="page = 'register'" />
-  <Register v-if="page === 'register'" />
+  <Home v-if="page === 'home'" @goRegister="page='register'" @goLogin="page='login'" />
+  <Register v-if="page === 'register'" @goLogin="page='login'" />
+  <Login v-if="page === 'login'" @goRegister="page='register'" @goDashboard="page='dashboard'" />
+  <Dashboard v-if="page === 'dashboard'" />
 </template>
 
 <script setup>
 import { ref } from "vue";
 import Home from "./views/Home.vue";
 import Register from "./views/Register.vue";
+import Login from "./views/Login.vue";
+import Dashboard from "./views/Dashboard.vue";
 
 const page = ref("home");
 </script>
