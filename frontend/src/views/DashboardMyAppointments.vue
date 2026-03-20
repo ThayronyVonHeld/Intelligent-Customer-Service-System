@@ -7,7 +7,7 @@
             <div v-for="c in consultations" :key="c._id" class="appointment-card">
                 <div class="info">
                     <div class="service-tag">{{ c.service }}</div>
-                    <p><strong>📅 Data:</strong> {{ c.date }}</p>
+                    <p><strong>📅 Data:</strong> {{ formatarDataBR(c.date) }}</p>
                     <p><strong>⏰ Hora:</strong> {{ c.time }}</p>
 
                     <p v-if="c.observations" class="obs-text">
@@ -34,6 +34,12 @@ import { useToast } from "vue-toastification";
 
 const toast = useToast();
 const consultations = ref([]);
+
+const formatarDataBR = (dataISO) => {
+  if (!dataISO) return "N/A";
+  const [ano, mes, dia] = dataISO.split("-");
+  return `${dia}/${mes}/${ano}`;
+};
 
 const loadConsultations = async () => {
     try {

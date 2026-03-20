@@ -24,8 +24,8 @@
         <hr />
 
         <div class="consultation-info">
-          <p><strong>📅 Data:</strong> {{ c.date }}</p>
-          <p><strong>⏰ Hora:</strong> {{ c.time }}</p>
+          <p><strong>📅 Data:</strong> {{ formatarDataBR(c.date) }}</p>
+  <p><strong>⏰ Hora:</strong> {{ formatarHorario(c.time) }}</p>
         </div>
 
         <div v-if="c.observations" class="obs-box">
@@ -57,12 +57,38 @@ const toast = useToast();
 const router = useRouter();
 const consultations = ref([]);
 
+const formatarHorario = (horario) => {
+  if (!horario) return "N/A";
+  
+  let cleanTime = horario.toUpperCase().replace("AM", "").replace("PM", "").trim();
+  
+  if (cleanTime.length === 4 && cleanTime.includes(":")) {
+    cleanTime = "0" + cleanTime;
+  }
+  
+  return cleanTime;
+};
+
+const formatarDataBR = (dataISO) => {
+  if (!dataISO) return "N/A";
+  const [ano, mes, dia] = dataISO.split("-");
+  return `${dia}/${mes}/${ano}`;
+};
+
 const loadConsultations = async () => {
   try {
     const res = await api.get("/consultations/all");
-    consultations.value = res.data;
+    
+    consultations.value = res.data.sort((a, b) => {
+      
+      if (a.date !== b.date) {
+        return a.date.localeCompare(b.date);
+      }
+      return a.time.localeCompare(b.time);
+    });
+    
   } catch (err) {
-    toast.error("Acesso negado ou erro ao carregar");
+    toast.error("Erro ao carregar");
   }
 };
 
