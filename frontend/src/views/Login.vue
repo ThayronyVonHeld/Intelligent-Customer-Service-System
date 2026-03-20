@@ -75,7 +75,9 @@ const login = async () => {
 </script>
 
 <style scoped>
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -83,15 +85,15 @@ const login = async () => {
 
 .container {
   display: flex;
-  width: 100vw; 
+  width: 100vw;
   height: 100vh;
   margin: 0;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 
 .left {
-  flex: 0 0 60%; 
+  flex: 0 0 60%;
   background: url("https://images.unsplash.com/photo-1580281657527-47b0c1a3b8d3") no-repeat center;
   background-size: cover;
   display: block;
@@ -100,7 +102,7 @@ const login = async () => {
 .overlay {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0,180,216,0.6), rgba(128,237,153,0.6));
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.6), rgba(128, 237, 153, 0.6));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,7 +110,7 @@ const login = async () => {
 
 
 .overlay h1 {
-  color: white; 
+  color: white;
   font-size: 2.5rem;
   font-weight: bold;
 }
@@ -117,17 +119,17 @@ const login = async () => {
 .right {
 
   flex: 0 0 40%;
-  
+
   display: flex;
-  justify-content: center; 
-  align-items: center;     
+  justify-content: center;
+  align-items: center;
   background: white;
-  padding: 30px; 
+  padding: 30px;
 }
 
 .form-box {
   width: 100%;
-  max-width: 320px; 
+  max-width: 320px;
 }
 
 h2.brand {
@@ -144,7 +146,8 @@ h3 {
 }
 
 input {
-  width: 100%; /* Ocupa 100% da form-box */
+  width: 100%;
+  /* Ocupa 100% da form-box */
   padding: 12px;
   margin-bottom: 15px;
   border-radius: 8px;
@@ -177,7 +180,8 @@ button:hover {
 }
 
 button:active {
-  transform: scale(0.98); /* Efeito de clique */
+  transform: scale(0.98);
+  /* Efeito de clique */
 }
 
 .login-text {
@@ -195,8 +199,9 @@ button:active {
 
 @media (max-width: 768px) {
   .left {
-    display: none; 
+    display: none;
   }
+
   .right {
     flex: 0 0 100%;
     width: 100%;

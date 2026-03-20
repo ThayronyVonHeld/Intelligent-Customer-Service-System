@@ -17,9 +17,9 @@
         Cuidado, atenção e profissionalismo para sua recuperação e bem-estar.
       </p>
 
-     <button @click="$router.push('/register')">
+      <button @click="$router.push('/register')">
         Marque já sua consulta
-     </button>
+      </button>
     </section>
 
     <section class="info">
@@ -43,7 +43,6 @@
 </template>
 
 <style scoped>
-
 .home {
   width: 100%;
   min-height: 100vh;
@@ -60,7 +59,7 @@
   align-items: center;
   padding: 20px 50px;
   background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .logo {
@@ -120,7 +119,6 @@
   width: 250px;
   text-align: center;
 
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
 </style>

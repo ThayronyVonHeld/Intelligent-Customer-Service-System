@@ -9,34 +9,31 @@
     <div class="right">
       <div class="form-box">
         <h2 class="brand">Dra. Maggessy Fisioterapia</h2>
-<h3>Cadastro</h3>
+        <h3>Cadastro</h3>
 
-<input v-model="name" placeholder="Nome completo" />
-<input v-model="email" placeholder="Email" />
-<input v-model="password" type="password" placeholder="Senha" />
+        <input v-model="name" placeholder="Nome completo" />
+        <input v-model="email" placeholder="Email" />
+        <input v-model="password" type="password" placeholder="Senha" />
 
-<div class="address-grid">
-  <input v-model="cep" placeholder="CEP" @blur="searchCEP" class="cep-input" />
-  <input v-model="numero" placeholder="Nº" class="numero-input" />
-</div>
+        <div class="address-grid">
+          <input v-model="cep" placeholder="CEP" @blur="searchCEP" class="cep-input" />
+          <input v-model="numero" placeholder="Nº" class="numero-input" />
+        </div>
 
-<input v-model="rua" placeholder="Logradouro (Rua/Av)" disabled />
-<input v-model="bairro" placeholder="Bairro" disabled />
+        <input v-model="rua" placeholder="Logradouro (Rua/Av)" disabled />
+        <input v-model="bairro" placeholder="Bairro" disabled />
 
-<div class="address-grid">
-  <input v-model="cidade" placeholder="Cidade" disabled />
-  <input v-model="estado" placeholder="UF" disabled class="uf-input" />
-</div>
-<button @click="register">Cadastrar</button>
+        <div class="address-grid">
+          <input v-model="cidade" placeholder="Cidade" disabled />
+          <input v-model="estado" placeholder="UF" disabled class="uf-input" />
+        </div>
+        <button @click="register">Cadastrar</button>
 
         <p class="login-text">
           Já tem uma conta?
-          <span 
-  class="login-link" 
-  @click="$router.push('/login')"
->
-  Faça login
-</span>
+          <span class="login-link" @click="$router.push('/login')">
+            Faça login
+          </span>
         </p>
       </div>
     </div>
@@ -71,12 +68,12 @@ const searchCEP = async () => {
   try {
     toast.info("Buscando endereço...");
     const res = await api.get(`/address/${cleanCEP}`);
-    
+
     rua.value = res.data.rua;
     bairro.value = res.data.bairro;
     cidade.value = res.data.cidade;
     estado.value = res.data.estado;
-    
+
     toast.success("Endereço encontrado!");
   } catch (err) {
     toast.error("CEP não encontrado ou erro na busca.");
@@ -102,7 +99,7 @@ const register = async () => {
     });
 
     toast.success("Cadastro realizado com sucesso!");
-    router.push("/login"); 
+    router.push("/login");
   } catch (error) {
     toast.error(error.response?.data?.error || "Erro ao cadastrar");
   }
@@ -110,22 +107,21 @@ const register = async () => {
 </script>
 
 <style scoped>
-
 .container {
   display: flex;
-  width: 100vw; 
+  width: 100vw;
   height: 100vh;
   margin: 0;
 }
 
 .left {
-  flex: 0 0 60%; 
+  flex: 0 0 60%;
   background: url("https://images.unsplash.com/photo-1576091160550-2173dba999ef") no-repeat center;
   background-size: cover;
 }
 
 .right {
-  flex: 0 0 40%; 
+  flex: 0 0 40%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -135,13 +131,13 @@ const register = async () => {
 
 .form-box {
   width: 100%;
-  max-width: 320px; 
+  max-width: 320px;
 }
 
 .overlay {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0,180,216,0.6), rgba(128,237,153,0.6));
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.6), rgba(128, 237, 153, 0.6));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -221,10 +217,11 @@ button:hover {
   cursor: pointer;
   font-weight: bold;
 }
+
 .address-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
-  gap: 15px; 
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
   margin-bottom: 0px;
 }
 
@@ -233,13 +230,14 @@ button:hover {
 }
 
 .address-grid .uf-input {
-  
-  grid-column: span 1; 
+
+  grid-column: span 1;
 }
 
 .address-grid .cep-input {
-  grid-column: span 1.4; 
+  grid-column: span 1.4;
 }
+
 .address-grid .numero-input {
   grid-column: span 0.6;
 }
