@@ -14,8 +14,10 @@ connectDB();
 const app = express(); 
 
 app.use(cors({
- orign:
-   "https://clinica-clara-fisioterapeuta.vercel.app/"
+  origin: [
+    "http://localhost:5173",
+    "https://clinica-clara-fisioterapeuta.vercel.app"
+  ]
 }));
 app.use(express.json());
 
