@@ -8,10 +8,10 @@ const router = express.Router();
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { date, time } = req.body;
+    const { date, time, service, observations } = req.body;
 
-    if (!date || !time) {
-      return res.status(400).json({ error: "Data e horário são obrigatórios" });
+    if (!date || !time || !service) {
+      return res.status(400).json({ error: "Data, horário e serviço são obrigatórios" });
     }
 
     const selectedDate = new Date(date);
@@ -32,6 +32,8 @@ router.post("/", authMiddleware, async (req, res) => {
       user: req.user.id,
       date,
       time,
+      service, 
+      observations,
       climaInfo: climaNoDia 
     });
 

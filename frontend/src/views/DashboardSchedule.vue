@@ -37,6 +37,7 @@
 import { ref } from "vue";
 import api from "../services/api";
 import { useToast } from "vue-toastification";
+import Swal from 'sweetalert2';
 
 const toast = useToast();
 const date = ref("");
@@ -55,101 +56,155 @@ const isSunday = (dateStr) => {
 
 const createConsultation = async () => {
     try {
-        if (isSunday(date.value)) {
-            return toast.error("Não atendemos aos domingos.");
-        }
-
-        await api.post("/consultations", {
-            date: date.value,
-            time: time.value,
-            service: service.value,     
-            observations: observations.value 
-        });
-
-        toast.success("Consulta de " + service.value + " agendada!");
-
-        date.value = "";
-        time.value = "";
-        service.value = "";
-        observations.value = "";
-    } catch (err) {
-        toast.error(err.response?.data?.error || "Erro ao agendar");
+    if (isSunday(date.value)) {
+      return Swal.fire({
+        title: 'Ops!',
+        text: 'Não atendemos aos domingos. Por favor, escolha outro dia.',
+        icon: 'info',
+        confirmButtonColor: '#00b4d8'
+      });
     }
+
+    await api.post("/consultations", { 
+      date: date.value, 
+      time: time.value,
+      service: service.value, 
+      observations: observations.value 
+    });
+
+    await Swal.fire({
+      title: 'Agendado!',
+      text: `Sua consulta de ${service.value} foi marcada para o dia ${date.value} às ${time.value}.`,
+      icon: 'success',
+      confirmButtonColor: '#3085d6',
+      timer: 5000, 
+      timerProgressBar: true
+    });
+    
+  
+    date.value = ""; 
+    time.value = "";
+    service.value = "";
+    observations.value = "";
+
+  } catch (err) {
+    Swal.fire({
+      title: 'Erro ao agendar',
+      text: err.response?.data?.error || 'Não foi possível completar seu agendamento. Tente novamente.',
+      icon: 'error',
+      confirmButtonColor: '#ff6b6b'
+    });
+  }
 };
 </script>
 
 <style scoped>
 .schedule-container {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
 }
 
 .card {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 450px;
+  background: white;
+  padding: 35px; 
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid #f0f0f0;
+}
+
+h3 {
+  color: #0077b6;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.card p {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
 }
 
 .input-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-    color: #1d3557;
-    font-size: 0.9rem;
+  display: block;
+  margin-top: 18px;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.85rem;
 }
 
 .datetime-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 10px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 15px;
 }
 
 input,
 select,
 textarea {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    outline: none;
-    font-family: inherit;
+  width: 100%;
+  padding: 12px 15px;
+  margin-top: 8px;
+  border-radius: 12px; 
+  border: 1.5px solid #eee;
+  background: #fafafa;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.3s ease;
 }
 
 textarea {
-    resize: none;
+  resize: none;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: #00b4d8;
+  border-color: #00b4d8;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
 }
 
 button {
-    width: 100%;
-    background: #00b4d8;
-    color: white;
-    border: none;
-    padding: 15px;
-    margin-top: 25px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+  display: block;
+  width: auto; 
+  min-width: 200px;
+  margin: 30px auto 0 auto; 
+  background: #00b4d8;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 50px; 
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 180, 216, 0.2);
 }
 
 button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  background: #ddd;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 button:hover:not(:disabled) {
-    background: #0096b1;
-    transform: translateY(-2px);
+  background: #0096b1;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(0, 180, 216, 0.3);
+}
+
+
+@media (max-width: 480px) {
+  .datetime-grid {
+    grid-template-columns: 1fr;
+  }
+  button {
+    width: 100%;
+  }
 }
 </style>

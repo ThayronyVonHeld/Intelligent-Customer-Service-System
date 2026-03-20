@@ -14,20 +14,28 @@
 
     <div class="list">
       <div v-for="c in consultations" :key="c._id" class="card">
+        <div class="service-badge">{{ c.service || 'Geral' }}</div>
+
         <div class="user-info">
           <p><strong>👤 Paciente:</strong> {{ c.user?.name || 'N/A' }}</p>
           <p><strong>📧 Contato:</strong> {{ c.user?.email }}</p>
         </div>
+
         <hr />
+
         <div class="consultation-info">
           <p><strong>📅 Data:</strong> {{ c.date }}</p>
           <p><strong>⏰ Hora:</strong> {{ c.time }}</p>
         </div>
 
+        <div v-if="c.observations" class="obs-box">
+          <strong>📝 Observações:</strong>
+          <p>{{ c.observations }}</p>
+        </div>
+
         <div v-if="c.clima" class="weather-badge">
            <span style="text-transform: capitalize;">🌤️ {{ c.clima.descricao }}</span> 
            <b>{{ Math.round(c.clima.temperatura) }}°C</b>
-           <span v-if="c.clima.chuva"> ☔</span>
         </div>
 
         <button class="delete-btn" @click="deleteConsultation(c._id)">
@@ -81,7 +89,7 @@ const deleteConsultation = async (id) => {
 
 const handleLogout = () => {
   localStorage.removeItem("token");
-  router.push("/"); // Volta para a Home usando o router
+  router.push("/"); 
 };
 
 onMounted(loadConsultations);
@@ -98,7 +106,7 @@ onMounted(loadConsultations);
 .nav-content {
   width: 100%;
   display: flex;
-  justify-content: space-between; /* Joga o botão para a direita ✅ */
+  justify-content: space-between; 
   align-items: center;
   background: white;
   padding: 15px 30px;
@@ -122,35 +130,57 @@ onMounted(loadConsultations);
   transform: scale(1.05);
 }
 
+.service-badge {
+  align-self: flex-start;
+  background: #e0f7fa;
+  color: #0077b6;
+  padding: 5px 15px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  border: 1px solid #b2ebf2;
+}
+
+.obs-box {
+  margin-top: 15px;
+  padding: 10px;
+  background: #fdfdfd;
+  border-left: 3px solid #00b4d8;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.obs-box strong {
+  display: block;
+  color: #1d3557;
+  margin-bottom: 4px;
+}
+
+.obs-box p {
+  color: #666;
+  font-style: italic;
+  line-height: 1.4;
+}
+
 .list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
 .card {
   background: white;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin: 15px 0;
-}
-
-.weather-badge {
-  background: #f0faff;
-  padding: 10px;
-  border-radius: 10px;
-  margin: 15px 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
   display: flex;
-  justify-content: space-around;
-  border: 1px solid #d1ecf1;
+  flex-direction: column;
 }
+
+hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
 
 .delete-btn {
   background: #ff6b6b;
@@ -158,8 +188,8 @@ hr {
   border: none;
   padding: 12px;
   border-radius: 8px;
+  margin-top: 15px;
   cursor: pointer;
   font-weight: bold;
-  width: 100%;
 }
 </style>

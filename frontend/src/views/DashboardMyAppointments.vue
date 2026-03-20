@@ -6,15 +6,18 @@
         <div class="grid">
             <div v-for="c in consultations" :key="c._id" class="appointment-card">
                 <div class="info">
+                    <div class="service-tag">{{ c.service }}</div>
                     <p><strong>📅 Data:</strong> {{ c.date }}</p>
                     <p><strong>⏰ Hora:</strong> {{ c.time }}</p>
 
+                    <p v-if="c.observations" class="obs-text">
+                        "{{ c.observations }}"
+                    </p>
+
                     <div v-if="c.clima" class="weather-box">
-                        <span class="clima-desc">🌤️ {{ c.clima.descricao }}</span>
-                        <b class="temp">{{ Math.round(c.clima.temperatura) }}°C</b>
-                        <div v-if="c.clima.chuva" class="chuva-alert">
-                            ☔ <i>Leve o guarda-chuva!</i>
-                        </div>
+                        <span style="text-transform: capitalize;">🌤️ {{ c.clima.descricao }}</span>
+                        <b style="color: #0077b6; margin-left: 8px;">{{ Math.round(c.clima.temperatura) }}°C</b>
+                        <span v-if="c.clima.chuva" class="rain-alert"> ☔ <i>Leve guarda-chuva!</i></span>
                     </div>
                 </div>
                 <button @click="deleteConsultation(c._id)" class="cancel-btn">Cancelar</button>
@@ -26,7 +29,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "../services/api";
-import Swal from 'sweetalert2'; // Importando Swal novamente
+import Swal from 'sweetalert2'; 
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
