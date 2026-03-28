@@ -94,7 +94,7 @@ const login = async () => {
 
 .left {
   flex: 0 0 60%;
-  background: url("https://images.unsplash.com/photo-1580281657527-47b0c1a3b8d3") no-repeat center;
+  background: url("https://github.com/ThayronyVonHeld/Clinica-Clara-Fisioterapeuta/blob/main/frontend/src/assets/LogoClara.png") no-repeat center;
   background-size: cover;
   display: block;
 }
